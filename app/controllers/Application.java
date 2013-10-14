@@ -6,6 +6,7 @@ import play.mvc.Result;
 import views.html.Index;
 import views.html.NewContact;
 import views.formdata.ContactFormData;
+import models.ContactDB;
 
 /**
  * Implements the controllers for this application.
@@ -17,7 +18,7 @@ public class Application extends Controller {
    * @return The resulting home page. 
    */
   public static Result index() {
-    return ok(Index.render("Welcome to the home page."));
+    return ok(Index.render(ContactDB.getContacts()));
   }
   
   /**
@@ -36,12 +37,10 @@ public class Application extends Controller {
   public static Result postContact() {
     Form<ContactFormData> formData = Form.form(ContactFormData.class).bindFromRequest();
     if (formData.hasErrors()) {
-      System.out.println("Errors found.");
       return badRequest(NewContact.render(formData));
     }
     ContactFormData data = formData.get();
-    System.out.println(data.firstName + " " + data.lastName + " " + data.telephone);
-    
+    ContactDB.addContact(data);
     return ok(NewContact.render(formData));
   }
 
