@@ -23,10 +23,12 @@ public class Application extends Controller {
   
   /**
    * Returns newcontact page
+   * @param id The id to get or create a new instance if id is zero
    * @return the NewContact page.
    */
-  public static Result newContact() {
-    Form<ContactFormData> formData = Form.form(ContactFormData.class);
+  public static Result newContact(long id) {
+    ContactFormData data = (id == 0) ? new ContactFormData() : new ContactFormData(ContactDB.getContact(id));
+    Form<ContactFormData> formData = Form.form(ContactFormData.class).fill(data);
     return ok(NewContact.render(formData));
   }
   
