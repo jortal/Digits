@@ -3,7 +3,6 @@
 Overview
 ========
 A Play application that provides a contact application.
-WOD-2 Start: 7:33pm
 
 Installation
 ============
