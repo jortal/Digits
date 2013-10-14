@@ -14,10 +14,12 @@ import play.data.validation.ValidationError;
 public class ContactFormData {
   
   private static final int NUM_TELEPHONE_CHARS = 12;
+  private static final int NUM_ADDRESS_CHARS = 25;
   public long id; // ID field
   public String firstName = ""; // first name form field
   public String lastName = ""; // last name form field
   public String telephone = ""; // telephone form field
+  public String address = ""; // address form field
   
   public ContactFormData() {
     // no arg constructor
@@ -28,6 +30,7 @@ public class ContactFormData {
     this.firstName = contact.getFirstName();
     this.lastName = contact.getLastName();
     this.telephone = contact.getTelephone();
+    this.address = contact.getAddress();
   }
 
   /**
@@ -49,6 +52,12 @@ public class ContactFormData {
 
     if (telephone.length() != NUM_TELEPHONE_CHARS) {
       errors.add(new ValidationError("telephone", "Telephone must be xxx-xxx-xxxx"));
+    }
+    if (address == null) {
+      errors.add(new ValidationError("address", "Address field must not be empty."));
+    }
+    if (address.length() < NUM_ADDRESS_CHARS) {
+      errors.add(new ValidationError("address", "Address must be at least 25 characters long."));
     }
     
     return errors.isEmpty() ? null : errors;
