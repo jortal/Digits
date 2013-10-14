@@ -1,7 +1,30 @@
-@(message: String)
+@(message: String) @Main("Home") {
+<div class="container">
+	<h2>Current Contacts</h2>
+	<table class="table table-bordered">
+		<thead>
+			<tr>
+				<th>First</th>
+				<th>Last</th>
+				<th>Phone</th>
+			</tr>
+		</thead>
+		<tr>
+			<td>John</td>
+			<td>Smith</td>
+			<td>808-555-0000</td>
+		</tr>
+		<tr>
+			<td>Jack</td>
+			<td>Smith</td>
+			<td>808-555-0001</td>
+		</tr>
+		<tr>
+			<td>Jill</td>
+			<td>Smith</td>
+			<td>808-555-0002</td>
+		</tr>
 
-@Main("Home") {
-   <div class="container">
-     <p>@message</p> 
-   </div>
+	</table>
+</div>
 }
