@@ -1,4 +1,4 @@
-![screenshot](https://raw.github.com/jortal/digits/master/doc/digits1.png)
+![screenshot](https://raw.github.com/jortal/digits/Attempt-1/doc/digits1.png)
 
 Overview
 ========
