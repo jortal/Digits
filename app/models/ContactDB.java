@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import play.data.Form;
 import views.formdata.ContactFormData;
 
 /**
@@ -47,5 +48,9 @@ public class ContactDB {
       throw new RuntimeException("Invalid ID: " + id);      
     }
     return contact;
+  }
+  
+  public static void deleteContact(long id) {
+    contacts.remove(id);
   }
 }
