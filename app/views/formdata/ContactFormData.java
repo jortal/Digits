@@ -14,14 +14,25 @@ import play.data.validation.ValidationError;
 public class ContactFormData {
   
   private static final int NUM_TELEPHONE_CHARS = 12;
-  public long id; // ID field
+  
+  /** ID field. **/
+  public long id; 
+  /** First name form field. **/
   public String firstName = ""; // first name form field
+  /** Last name form field. **/
   public String lastName = ""; // last name form field
+  /** Telephone. **/
   public String telephone = ""; // telephone form field
   
+  /** No argument constructor. **/
   public ContactFormData() {
     // no arg constructor
   }
+  
+  /**
+   * Constructor for the contact list.
+   * @param contact The list of contacts.
+   */
   
   public ContactFormData(Contact contact) {
     this.id = contact.getId();

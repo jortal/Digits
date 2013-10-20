@@ -17,7 +17,7 @@ public class ContactDB {
   private static Map<Long, Contact> contacts = new HashMap<>();
   
   /**
-   * Updates the "database" if id = 0, else updates an old entry
+   * Updates the "database" if id = 0, else updates an old entry.
    * @param formData The contact data
    * @return The created contact
    */

@@ -22,7 +22,7 @@ public class Application extends Controller {
   }
   
   /**
-   * Returns newcontact page
+   * Returns newcontact page.
    * @param id The id to get or create a new instance if id is zero
    * @return the NewContact page.
    */
@@ -33,7 +33,7 @@ public class Application extends Controller {
   }
   
   /**
-   * Handles post of form data
+   * Handles post of form data.
    * @return the NewContact page.
    */
   public static Result postContact() {
