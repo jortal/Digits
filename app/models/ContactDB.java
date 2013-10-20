@@ -37,7 +37,7 @@ public class ContactDB {
     return new ArrayList<>(contacts.values());
   }
   
-  /**
+  /** 
    * Returns Contact with associated ID.
    * @param id The ID.
    * @return The retrieved ID.
