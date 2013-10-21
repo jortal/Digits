@@ -18,11 +18,13 @@ public class ContactFormData {
   /** ID field. **/
   public long id; 
   /** First name form field. **/
-  public String firstName = ""; // first name form field
+  public String firstName = ""; 
   /** Last name form field. **/
-  public String lastName = ""; // last name form field
+  public String lastName = ""; 
   /** Telephone. **/
-  public String telephone = ""; // telephone form field
+  public String telephone = ""; 
+  /** Telephone type. **/
+  public String telephoneType = "";
   
   /** No argument constructor. **/
   public ContactFormData() {
@@ -39,6 +41,7 @@ public class ContactFormData {
     this.firstName = contact.getFirstName();
     this.lastName = contact.getLastName();
     this.telephone = contact.getTelephone();
+    this.telephoneType = contact.getTelephoneType();
   }
 
   /**
@@ -62,6 +65,9 @@ public class ContactFormData {
       errors.add(new ValidationError("telephone", "Telephone must be xxx-xxx-xxxx"));
     }
     
+    if (!TelephoneTypes.isType(telephoneType)) {
+      errors.add(new ValidationError("telephoneType", "Telephone type must be Home, Work, or Mobile"));      
+    }
     return errors.isEmpty() ? null : errors;
   }
 
