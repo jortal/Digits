@@ -31,6 +31,22 @@ public class ContactFormData {
     // no arg constructor
   }
   
+  
+  
+  /**
+   * Constructs a ContactFormData object manually for the purpose of initializing the contact table.
+   * @param firstName The first name.
+   * @param lastName The last name.
+   * @param telephone The telephone number.
+   * @param telephoneType The telephone type.
+   */
+  public ContactFormData(String firstName, String lastName, String telephone, String telephoneType) {
+    this.firstName = firstName;
+    this.lastName = lastName;
+    this.telephone = telephone;
+    this.telephoneType = telephoneType;
+  }
+
   /**
    * Constructor for the contact list.
    * @param contact The list of contacts.
