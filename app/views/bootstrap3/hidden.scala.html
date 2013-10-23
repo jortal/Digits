@@ -6,7 +6,8 @@
       <input type="hidden" 
              id="@field.id" 
              name="@field.name" 
-             value="@field.value.getOrElse("")"
+             value="@field.value.getOrElse("")>
+      <span class="help-block">@{field.error.map { error => error.message }}</span>       
     </div>
   </div>
  
