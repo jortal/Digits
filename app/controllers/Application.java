@@ -12,6 +12,8 @@ import views.formdata.ContactFormData;
 import views.formdata.LoginFormData;
 import views.formdata.TelephoneTypes;
 import models.ContactDB;
+import models.UserInfo;
+import models.UserInfoDB;
 
 /**
  * Implements the controllers for this application.
@@ -22,8 +24,12 @@ public class Application extends Controller {
    * Returns the home page. 
    * @return The resulting home page. 
    */
+  @Security.Authenticated(Secured.class)  
   public static Result index() {
-    return ok(Index.render("Home", Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx()), ContactDB.getContacts()));
+    UserInfo userInfo = UserInfoDB.getUser(request().username());
+    Boolean isLoggedIn = (userInfo != null);
+    String user = userInfo.getEmail();
+    return ok(Index.render("Home", isLoggedIn, userInfo, ContactDB.getContacts(user)));
   }
   
   /**
@@ -33,10 +39,13 @@ public class Application extends Controller {
    */
   @Security.Authenticated(Secured.class)  
   public static Result newContact(long id) {
-    ContactFormData data = (id == 0) ? new ContactFormData() : new ContactFormData(ContactDB.getContact(id));
+    UserInfo userInfo = UserInfoDB.getUser(request().username());
+    Boolean isLoggedIn = (userInfo != null);
+    String user = userInfo.getEmail();
+    ContactFormData data = (id == 0) ? new ContactFormData() : new ContactFormData(ContactDB.getContact(user, id));
     Form<ContactFormData> formData = Form.form(ContactFormData.class).fill(data);
     Map<String, Boolean> telephoneTypeMap = TelephoneTypes.getTypes(data.telephoneType);
-    return ok(NewContact.render("New", Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx()), formData, telephoneTypeMap));
+    return ok(NewContact.render("New", isLoggedIn, userInfo, formData, telephoneTypeMap));
   }
   
   /**
@@ -46,15 +55,18 @@ public class Application extends Controller {
   @Security.Authenticated(Secured.class)  
   public static Result postContact() {
     Form<ContactFormData> formData = Form.form(ContactFormData.class).bindFromRequest();
+    UserInfo userInfo = UserInfoDB.getUser(request().username());
+    Boolean isLoggedIn = (userInfo != null);
+    String user = userInfo.getEmail();
     if (formData.hasErrors()) {
       Map<String, Boolean> telephoneTypeMap = TelephoneTypes.getTypes();
-      return badRequest(NewContact.render("New", Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx()), formData, telephoneTypeMap));
+      return badRequest(NewContact.render("New", isLoggedIn, userInfo, formData, telephoneTypeMap));
     }
     else {
       ContactFormData data = formData.get();
-      ContactDB.addContact(data);
+      ContactDB.addContact(user, data);
       Map<String, Boolean> telephoneTypeMap = TelephoneTypes.getTypes();      
-      return ok(NewContact.render("New", Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx()), formData, telephoneTypeMap));
+      return ok(Index.render("Home", isLoggedIn, userInfo, ContactDB.getContacts(user)));
     }
   }
 
