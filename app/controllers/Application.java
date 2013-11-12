@@ -11,6 +11,7 @@ import views.html.NewContact;
 import views.formdata.ContactFormData;
 import views.formdata.LoginFormData;
 import views.formdata.TelephoneTypes;
+import views.formdata.UserFormData;
 import models.ContactDB;
 import models.UserInfo;
 import models.UserInfoDB;
@@ -27,9 +28,12 @@ public class Application extends Controller {
   @Security.Authenticated(Secured.class)  
   public static Result index() {
     UserInfo userInfo = UserInfoDB.getUser(request().username());
-    Boolean isLoggedIn = (userInfo != null);
-    String user = userInfo.getEmail();
-    return ok(Index.render("Home", isLoggedIn, userInfo, ContactDB.getContacts(user)));
+    Boolean isLoggedIn = (userInfo != null);  
+    if (isLoggedIn && userInfo.getEmail() != null) {
+      String user = userInfo.getEmail();
+      return ok(Index.render("Home", isLoggedIn, userInfo, ContactDB.getContacts(user)));
+    }
+    else { return redirect(routes.Application.logout()); }  
   }
   
   /**
@@ -41,11 +45,14 @@ public class Application extends Controller {
   public static Result newContact(long id) {
     UserInfo userInfo = UserInfoDB.getUser(request().username());
     Boolean isLoggedIn = (userInfo != null);
-    String user = userInfo.getEmail();
-    ContactFormData data = (id == 0) ? new ContactFormData() : new ContactFormData(ContactDB.getContact(user, id));
-    Form<ContactFormData> formData = Form.form(ContactFormData.class).fill(data);
-    Map<String, Boolean> telephoneTypeMap = TelephoneTypes.getTypes(data.telephoneType);
-    return ok(NewContact.render("New", isLoggedIn, userInfo, formData, telephoneTypeMap));
+    if (isLoggedIn && userInfo.getEmail() != null) {    
+      String user = userInfo.getEmail();
+      ContactFormData data = (id == 0) ? new ContactFormData() : new ContactFormData(ContactDB.getContact(user, id));
+      Form<ContactFormData> formData = Form.form(ContactFormData.class).fill(data);
+      Map<String, Boolean> telephoneTypeMap = TelephoneTypes.getTypes(data.telephoneType);
+      return ok(NewContact.render("New", isLoggedIn, userInfo, formData, telephoneTypeMap));
+    }
+    else { return redirect(routes.Application.logout()); }
   }
   
   /**
@@ -65,16 +72,16 @@ public class Application extends Controller {
     else {
       ContactFormData data = formData.get();
       ContactDB.addContact(user, data);
-      Map<String, Boolean> telephoneTypeMap = TelephoneTypes.getTypes();      
       return ok(Index.render("Home", isLoggedIn, userInfo, ContactDB.getContacts(user)));
     }
   }
 
   public static Result login() {
     Form<LoginFormData> formData = Form.form(LoginFormData.class);
-    return ok(Login.render("Login", Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx()), formData));
+    Form<UserFormData> formUserData = Form.form(UserFormData.class);    
+    return ok(Login.render("Login", Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx()), formData, formUserData));
   }
-
+ 
   /**
    * Processes a login form submission from an unauthenticated user. 
    * First we bind the HTTP POST data to an instance of LoginFormData.
@@ -87,10 +94,11 @@ public class Application extends Controller {
 
     // Get the submitted form data from the request object, and run validation.
     Form<LoginFormData> formData = Form.form(LoginFormData.class).bindFromRequest();
+    Form<UserFormData> formUserData = Form.form(UserFormData.class);    
 
     if (formData.hasErrors()) {
       flash("error", "Login credentials not valid.");
-      return badRequest(Login.render("Login", Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx()), formData));
+      return badRequest(Login.render("Login", Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx()), formData, formUserData));
     }
     else {
       // email/password OK, so now we set the session variable and only go to authenticated pages.
@@ -99,7 +107,29 @@ public class Application extends Controller {
       return redirect(routes.Application.index());
     }
   }
-  
+
+  public static Result postUser() {
+
+    // Get the submitted form data from the request object, and run validation.
+    Form<LoginFormData> formData = Form.form(LoginFormData.class).bindFromRequest();
+    Form<UserFormData> formUserData = Form.form(UserFormData.class).bindFromRequest();
+    // String user = Secured.getUserInfo(ctx()).getEmail();
+
+    if (formUserData.hasErrors()) {
+      flash("usererror", "E-mail exists in the database, choose another.");
+      return badRequest(Login.render("Login", Secured.isLoggedIn(ctx()), 
+                        Secured.getUserInfo(ctx()), formData, formUserData));
+    }
+    else {
+      // Email doesn't exist, create user and proceed.
+      session().clear();
+      UserFormData data = formUserData.get();
+      UserInfoDB.addUserInfo(data.name, data.email, data.password);      
+      session("email", formUserData.get().email);
+      return redirect(routes.Application.index());
+    }
+  }
+    
   /**
    * Logs out (only for authenticated users) and returns them to the Index page. 
    * @return A redirect to the Index page. 

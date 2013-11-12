@@ -27,6 +27,7 @@ public class TelephoneTypes {
   
   /**
    * Returns a Map of the selected telephone type.
+   * @param telType The telephone type.
    * @return The telephone type map.
    */
   public static Map<String, Boolean> getTypes(String telType) {
