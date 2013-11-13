@@ -72,7 +72,7 @@ public class Application extends Controller {
       ContactFormData data = formData.get();
       ContactDB.addContact(user, data);
       Map<String, Boolean> telephoneTypeMap = TelephoneTypes.getTypes();      
-      return ok(NewContact.render("New", isLoggedIn, userInfo, formData, telephoneTypeMap));
+      return ok(Index.render("Home", isLoggedIn, userInfo, ContactDB.getContacts(user)));
     }    
   }
 
