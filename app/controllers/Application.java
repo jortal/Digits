@@ -45,11 +45,11 @@ public class Application extends Controller {
   public static Result newContact(long id) {
     UserInfo userInfo = UserInfoDB.getUser(request().username());
     Boolean isLoggedIn = (userInfo != null);
-    String user = userInfo.getEmail();
-    ContactFormData data = (id == 0) ? new ContactFormData() : new ContactFormData(ContactDB.getContact(user, id));
-    Form<ContactFormData> formData = Form.form(ContactFormData.class).fill(data);
-    Map<String, Boolean> telephoneTypeMap = TelephoneTypes.getTypes(data.telephoneType);
     if (isLoggedIn && userInfo.getEmail() != null) {
+      String user = userInfo.getEmail();
+      ContactFormData data = (id == 0) ? new ContactFormData() : new ContactFormData(ContactDB.getContact(user, id));
+      Form<ContactFormData> formData = Form.form(ContactFormData.class).fill(data);
+      Map<String, Boolean> telephoneTypeMap = TelephoneTypes.getTypes(data.telephoneType);      
       return ok(NewContact.render("New", isLoggedIn, userInfo, formData, telephoneTypeMap));
     }
     else { return redirect(routes.Application.logout()); }
@@ -64,16 +64,15 @@ public class Application extends Controller {
     Form<ContactFormData> formData = Form.form(ContactFormData.class).bindFromRequest();
     UserInfo userInfo = UserInfoDB.getUser(request().username());
     Boolean isLoggedIn = (userInfo != null);
-    String user = userInfo.getEmail();
     if (formData.hasErrors()) {
       Map<String, Boolean> telephoneTypeMap = TelephoneTypes.getTypes();
       return badRequest(NewContact.render("New", isLoggedIn, userInfo, formData, telephoneTypeMap));
     }
     else {
+      String user = userInfo.getEmail();      
       ContactFormData data = formData.get();
       ContactDB.addContact(user, data);
-      Map<String, Boolean> telephoneTypeMap = TelephoneTypes.getTypes();      
-      return ok(NewContact.render("New", isLoggedIn, userInfo, formData, telephoneTypeMap));
+      return ok(Index.render("Home", isLoggedIn, userInfo, ContactDB.getContacts(user)));
     }    
   }
 

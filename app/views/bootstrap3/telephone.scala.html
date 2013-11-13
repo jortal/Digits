@@ -7,8 +7,8 @@
 		  class="form-control"
 		  id="@telField.id"
 	      name="@telField.name" value="@telField.value.getOrElse("")"
-          placeholder="XXX-XXX-XXXX" /> <span
-	      class="help-block">@{telField.error.map { error => error.message }}</span>
+          placeholder="XXX-XXX-XXXX" /> 
+          <span class="help-block">@{telField.error.map { error => error.message }}</span>
 	</div>
 
 	<div class="col-sm-3">

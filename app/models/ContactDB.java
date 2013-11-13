@@ -24,12 +24,12 @@ public class ContactDB {
    * @return The created contact
    */
   public static Contact addContact(String user, ContactFormData formData) {
-    long idVal = (formData.id == 0) ? contacts.size() + 1 : formData.id;
-    Contact contact =
-        new Contact(idVal, formData.firstName, formData.lastName, formData.telephone, formData.telephoneType);
-    if (!isUser(user)) {
+    if (!contacts.containsKey(user)) {
       contacts.put(user, new HashMap<Long, Contact>());
     }
+    long idVal = (formData.id == 0) ? contacts.get(user).size() + 1 : formData.id;
+    Contact contact =
+        new Contact(idVal, formData.firstName, formData.lastName, formData.telephone, formData.telephoneType);    
     contacts.get(user).put(idVal, contact);
     return contact;
   }
