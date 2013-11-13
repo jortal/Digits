@@ -44,10 +44,10 @@ public class Application extends Controller {
   public static Result newContact(long id) {
     UserInfo userInfo = UserInfoDB.getUser(request().username());
     Boolean isLoggedIn = (userInfo != null);
-    ContactFormData data = (id == 0) ? new ContactFormData() : new ContactFormData(ContactDB.getContact(id));
-    Form<ContactFormData> formData = Form.form(ContactFormData.class).fill(data);
-    Map<String, Boolean> telephoneTypeMap = TelephoneTypes.getTypes(data.telephoneType);
     if (isLoggedIn && userInfo.getEmail() != null) {
+      ContactFormData data = (id == 0) ? new ContactFormData() : new ContactFormData(ContactDB.getContact(id));
+      Form<ContactFormData> formData = Form.form(ContactFormData.class).fill(data);
+      Map<String, Boolean> telephoneTypeMap = TelephoneTypes.getTypes(data.telephoneType);      
       return ok(NewContact.render("New", isLoggedIn, userInfo, formData, telephoneTypeMap));
     }
     else { return redirect(routes.Application.logout()); }
