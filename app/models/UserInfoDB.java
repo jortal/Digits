@@ -11,6 +11,25 @@ import java.util.Map;
 public class UserInfoDB {
   
   private static Map<String, UserInfo> userinfos = new HashMap<String, UserInfo>();
+
+  private static boolean isAdmin = false;
+  
+  /**
+   * Defines admin account if values are not null.
+   * @param name The name.
+   * @param email The email, or null if not found.
+   * @param password The password, or null if not found.
+   */
+  public static void addAdmin(String name, String email, String password) {
+    if ((email!= null ) && (password != null)) {
+      isAdmin = true;
+      addUserInfo("Administrator", email, password);
+    }
+  }
+  
+  public static boolean isAdmin() {
+    return isAdmin;
+  }
   
   /**
    * Adds the specified user to the UserInfoDB.

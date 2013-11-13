@@ -28,7 +28,6 @@ public class Application extends Controller {
   public static Result index() {
     UserInfo userInfo = UserInfoDB.getUser(request().username());
     Boolean isLoggedIn = (userInfo != null);
-    System.out.println(isLoggedIn + " " + userInfo.getEmail());    
     if (isLoggedIn && userInfo.getEmail() != null) {
       String user = userInfo.getEmail();
       return ok(Index.render("Home", isLoggedIn, userInfo, ContactDB.getContacts(user)));
