@@ -1,4 +1,6 @@
-@(contacts: List[Contact]) @Main("Home") {
+@(page: String, isLoggedIn: Boolean, userInfo: UserInfo, contacts: List[Contact]) 
+
+@Main(page, isLoggedIn, userInfo) {
 <div class="container">
 	<h2>Current Contacts</h2>
 	<table class="table table-striped table-bordered">
