@@ -12,6 +12,7 @@
 				<th>Type</th>
 			</tr>
 		</thead>
+        @if(contacts != null) {
 		@for(contact <- contacts) {
 		<tr>
 			<td>@contact.getFirstName()</td>
@@ -20,7 +21,7 @@
 			<td>@contact.getTelephoneType()</td>
 			<td><a href="@routes.Application.newContact(contact.getId())">Edit</a></td>
 		</tr>
-		}
+		}}
 	</table>
 </div>
 }

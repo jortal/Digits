@@ -30,7 +30,8 @@ public class Application extends Controller {
     Boolean isLoggedIn = (userInfo != null);
     System.out.println(isLoggedIn + " " + userInfo.getEmail());    
     if (isLoggedIn && userInfo.getEmail() != null) {
-      return ok(Index.render("Home", isLoggedIn, userInfo, ContactDB.getContacts()));
+      String user = userInfo.getEmail();
+      return ok(Index.render("Home", isLoggedIn, userInfo, ContactDB.getContacts(user)));
     }
     else { return redirect(routes.Application.logout()); }
   }
@@ -44,7 +45,8 @@ public class Application extends Controller {
   public static Result newContact(long id) {
     UserInfo userInfo = UserInfoDB.getUser(request().username());
     Boolean isLoggedIn = (userInfo != null);
-    ContactFormData data = (id == 0) ? new ContactFormData() : new ContactFormData(ContactDB.getContact(id));
+    String user = userInfo.getEmail();
+    ContactFormData data = (id == 0) ? new ContactFormData() : new ContactFormData(ContactDB.getContact(user, id));
     Form<ContactFormData> formData = Form.form(ContactFormData.class).fill(data);
     Map<String, Boolean> telephoneTypeMap = TelephoneTypes.getTypes(data.telephoneType);
     if (isLoggedIn && userInfo.getEmail() != null) {
@@ -61,19 +63,24 @@ public class Application extends Controller {
   public static Result postContact() {
     Form<ContactFormData> formData = Form.form(ContactFormData.class).bindFromRequest();
     UserInfo userInfo = UserInfoDB.getUser(request().username());
-    Boolean isLoggedIn = (userInfo != null);    
+    Boolean isLoggedIn = (userInfo != null);
+    String user = userInfo.getEmail();
     if (formData.hasErrors()) {
       Map<String, Boolean> telephoneTypeMap = TelephoneTypes.getTypes();
       return badRequest(NewContact.render("New", isLoggedIn, userInfo, formData, telephoneTypeMap));
     }
     else {
       ContactFormData data = formData.get();
-      ContactDB.addContact(data);
+      ContactDB.addContact(user, data);
       Map<String, Boolean> telephoneTypeMap = TelephoneTypes.getTypes();      
       return ok(NewContact.render("New", isLoggedIn, userInfo, formData, telephoneTypeMap));
     }    
   }
 
+  /**
+   * The login page.
+   * @return Login page.
+   */
   public static Result login() {
     Form<LoginFormData> formData = Form.form(LoginFormData.class);
     return ok(Login.render("Login", Secured.isLoggedIn(ctx()), Secured.getUserInfo(ctx()), formData));
