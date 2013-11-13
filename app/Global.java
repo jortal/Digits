@@ -2,7 +2,7 @@ import models.ContactDB;
 import models.UserInfoDB;
 import play.*;
 import views.formdata.ContactFormData;
-
+ 
 /**
  * Initializes contact information page.
  * @author Jonathan Ortal
