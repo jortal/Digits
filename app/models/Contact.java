@@ -1,16 +1,30 @@
 package models;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.ManyToOne;
+import play.db.ebean.Model;
+
 /**
  * 
  * 
  *
  */
-public class Contact {
+@Entity
+public class Contact extends Model {
   
+  private static final long serialVersionUID = 1L;
+  
+  @Id
   private long id;
   private String firstName;
   private String lastName;
   private String telephone;
   private String telephoneType;
+  
+  // 0-Many contacts map to one and only one user (UserInfo)
+  @ManyToOne
+  private UserInfo userInfo;
   
   
   /**
@@ -21,13 +35,20 @@ public class Contact {
    * @param telephone The telephone number.
    * @param telephoneType The telephone type.
    */
-  public Contact(long id, String firstName, String lastName, String telephone, String telephoneType) {
-    this.id = id;
+  public Contact(String firstName, String lastName, String telephone, String telephoneType) {
     this.firstName = firstName;
     this.lastName = lastName;
     this.telephone = telephone;
-    this.telephoneType = telephoneType;
+    this.setTelephoneType(telephoneType);
   }
+
+  /**
+   * The EBean ORM finder method for database queries on LastTimeStamp.
+   * @return The finder method for products.
+   */
+  public static Finder<Long, Contact> find() {
+    return new Finder<Long, Contact>(Long.class, Contact.class);
+  }  
   
   /** 
    * @return the first name.
@@ -87,5 +108,17 @@ public class Contact {
    */
   public String getTelephoneType() {
     return telephoneType;
+  }
+
+  public UserInfo getUserInfo() {
+    return userInfo;
+  }
+
+  public void setUserInfo(UserInfo userInfo) {
+    this.userInfo = userInfo;
+  }
+
+  public void setTelephoneType(String telephoneType) {
+    this.telephoneType = telephoneType;
   }
 }

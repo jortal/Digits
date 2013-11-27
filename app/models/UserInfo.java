@@ -1,15 +1,48 @@
 package models;
 
+import java.util.ArrayList;
+import java.util.List;
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.OneToMany;
+import play.db.ebean.Model;
+import play.db.ebean.Model.Finder;
+
 /**
  * A simple representation of a user. 
- * @author Philip Johnson
+ * @author Philip Johnson modified by Jonathan Ortal
  */
-public class UserInfo {
+@Entity
+public class UserInfo extends Model {
  
+  private static final long serialVersionUID = 1L;
+ 
+  @Id
+  private long id;
   private String name;
   private String email;
   private String password;
+  private boolean admin = false;
   
+  @OneToMany(mappedBy="userInfo")
+  private List<Contact> contacts = new ArrayList<>();
+  
+  public List<Contact> getContacts() {
+    return this.contacts;
+  }
+  
+  public void addContact(Contact contact) {
+    this.contacts.add(contact);
+  }
+
+  /**
+   * The EBean ORM finder method for database queries on LastTimeStamp.
+   * @return The finder method for products.
+   */
+  public static Finder<Long, UserInfo> find() {
+    return new Finder<Long, UserInfo>(Long.class, UserInfo.class);
+  }  
+      
   /**
    * Creates a new UserInfo instance.
    * @param name The name.
@@ -57,6 +90,22 @@ public class UserInfo {
    */
   public void setPassword(String password) {
     this.password = password;
+  }
+
+  public long getId() {
+    return id;
+  }
+
+  public void setId(long id) {
+    this.id = id;
+  }
+
+  public boolean isAdmin() {
+    return admin;
+  }
+
+  public void setAdmin(boolean admin) {
+    this.admin = admin;
   }
 
 }

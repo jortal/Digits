@@ -16,7 +16,7 @@ public class ContactFormData {
   private static final int NUM_TELEPHONE_CHARS = 12;
   
   /** ID field. **/
-  public long id; 
+  public long id = -1; 
   /** First name form field. **/
   public String firstName = ""; 
   /** Last name form field. **/
