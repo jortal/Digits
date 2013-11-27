@@ -24,7 +24,7 @@ public class UserInfo extends Model {
   private String password;
   private boolean admin = false;
   
-  @OneToMany(mappedBy="userInfo")
+  @OneToMany(mappedBy = "userInfo")
   private List<Contact> contacts = new ArrayList<>();
   
   public List<Contact> getContacts() {
