@@ -1,4 +1,4 @@
-package test;
+package tests;
 
 import org.junit.Test;
 import static org.fest.assertions.Assertions.assertThat;

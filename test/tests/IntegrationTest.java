@@ -1,4 +1,4 @@
-package test;
+package tests;
 
 import org.junit.Test;
 import play.test.TestBrowser;
